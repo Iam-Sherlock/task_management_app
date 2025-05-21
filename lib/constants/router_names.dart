@@ -4,4 +4,6 @@ class RouteNames {
   static const String signup = '/signup';
   static const String welcome = '/welcome';
   static const String tl_homepage = 'tlhomepage';
+  static const String emp_homepage = 'emphomepage';
+  static const String user_list = 'user_list';
 }

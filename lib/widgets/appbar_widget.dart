@@ -20,6 +20,7 @@ class AppbarWidget extends StatelessWidget implements PreferredSizeWidget {
     return PreferredSize(
       preferredSize: preferredSize,
       child: AppBar(
+        scrolledUnderElevation: 0, 
         automaticallyImplyLeading: false,
         backgroundColor: AppColors.primaryBgColor,
         title: Stack(

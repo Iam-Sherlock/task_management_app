@@ -1,10 +1,9 @@
+import 'package:get_storage/get_storage.dart';
 import 'package:provider/provider.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:task_management_app/constants/colors.dart';
 import 'package:task_management_app/constants/style.dart';
 import 'package:task_management_app/homepage/provider/homepage_provider.dart';
+import 'package:task_management_app/homepage/widgets/add_task_bottom_sheet.dart';
 import 'package:task_management_app/homepage/widgets/user_card.dart';
 import 'package:task_management_app/widgets/appbar_widget.dart';
 
@@ -15,64 +14,111 @@ class TeamLeadHomepage extends StatefulWidget {
   State<TeamLeadHomepage> createState() => _TeamLeadHomepageState();
 }
 
-List<String> userList = [];
-
-@override
 class _TeamLeadHomepageState extends State<TeamLeadHomepage> {
+  @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      userList = await getUsersList();
-      print("userList==== $userList");
-    });
-
     super.initState();
+    // Fetch the initial list when the widget is created
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<UserListProvider>(context, listen: false).fetchUsersListNew();
+      Provider.of<UserListProvider>(context, listen: false).fetchUsersList();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+            ),
+            builder: (context) => Consumer<UserListProvider>(
+              builder: (context, userListProvider, _) {
+                return AddTaskBottomSheet(userList: userListProvider.users);
+              },
+            ),
+          );
+        },
+        child: const Icon(Icons.add),
+      ),
       appBar: AppbarWidget(
         title: "Nulinz Task Manager",
         isInformation: false,
         backArraw: true,
       ),
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
         children: [
+          Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Text(
+              "List of Employees and Their Tasks",
+              style: Style.subHeadingStyle,
+              textAlign: TextAlign.left,
+            ),
+          ),
           Expanded(
-            // Wrap the Container with Expanded
-            child: Container(
-                // decoration: BoxDecoration(
-                //     color: AppColors.primaryBgColor,
-                //     boxShadow: AppColors.cardBoxShadow,
-                //     borderRadius: BorderRadius.only(
-                //         topLeft: Radius.circular(40),
-                //         topRight: Radius.circular(40))),
-                child: Column(
-              children: [
-                Text(
-                  "List of Employees",
-                  style: Style.subHeadingStyle,
-                  textAlign: TextAlign.left,
-                ),
-                Expanded(
-                  // Wrap SingleChildScrollView with Expanded as well
-                  child: SingleChildScrollView(
-                    child: ListView.builder(
-                      shrinkWrap: true, // Important for nested ListViews
-                      physics:
-                          ClampingScrollPhysics(), // Optional: Prevents bouncing
-                      itemCount: userList.length,
-                      itemBuilder: (context, index) {
-                        return UserListCard(
-                          nameOfEmployees: userList[index],
-                        );
-                      },
-                    ),
-                  ),
-                )
-              ],
-            )),
+            child: Consumer<UserListProvider>(
+              builder: (context, userListProvider, _) {
+                final usersWithTasks = userListProvider.userWithTasksList;
+
+                return ListView.builder(
+                  itemCount: usersWithTasks.length,
+                  itemBuilder: (context, index) {
+                    final user = usersWithTasks[index].user;
+                    final tasks = usersWithTasks[index].tasks;
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 6.0),
+                      child: UserListCard(
+                        user: user,
+                        tasks: tasks,
+                      ),
+                    );
+
+                    // return Card(
+                    //   elevation: 3,
+                    //   margin: const EdgeInsets.symmetric(
+                    //       horizontal: 12, vertical: 8),
+                    //   child: Padding(
+                    //     padding: const EdgeInsets.all(12.0),
+                    //     child: Column(
+                    //       crossAxisAlignment: CrossAxisAlignment.start,
+                    //       children: [
+                    //         Text(
+                    //           user.name ?? 'Unnamed User',
+                    //           style: TextStyle(
+                    //               fontSize: 18, fontWeight: FontWeight.bold),
+                    //         ),
+                    //         const SizedBox(height: 4),
+                    //         Text(user.email ?? 'No email'),
+                    //         const Divider(),
+                    //         tasks.isEmpty
+                    //             ? Text("No tasks assigned.")
+                    //             : ListView.builder(
+                    //                 itemCount: tasks.length,
+                    //                 shrinkWrap: true,
+                    //                 physics:
+                    //                     const NeverScrollableScrollPhysics(),
+                    //                 itemBuilder: (context, taskIndex) {
+                    //                   final task = tasks[taskIndex];
+                    //                   return ListTile(
+                    //                     title: Text(
+                    //                         "${taskIndex + 1}. ${task['task']}" ??
+                    //                             'No Title'),
+                    //                   );
+                    //                 },
+                    //               )
+                    //       ],
+                    //     ),
+                    //   ),
+                    // );
+                  },
+                );
+              },
+            ),
           ),
         ],
       ),

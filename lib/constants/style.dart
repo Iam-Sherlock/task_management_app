@@ -24,6 +24,12 @@ class Style {
       color: AppColors.textColorBlack,
       );
 
+   static TextStyle subHeadingStyleWithBlueColor = GoogleFonts.openSans(
+    fontWeight: FontWeight.w600,
+    fontSize: 12,
+    color: AppColors.primaryBlue,
+  );
+
   static TextStyle contentStyle = GoogleFonts.openSans(
       fontWeight: FontWeight.w400,
       fontSize: contentFontSize,

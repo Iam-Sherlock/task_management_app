@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:task_management_app/auth/providers/auth_provider.dart';
 import 'package:task_management_app/constants/colors.dart';
 import 'package:task_management_app/constants/style.dart';
@@ -24,6 +25,7 @@ class _SignUpState extends State<SignUp> {
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context, listen: true);
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppbarWidget(
@@ -41,6 +43,7 @@ class _SignUpState extends State<SignUp> {
             child: IntrinsicHeight(
               child: Column(
                 children: [
+                  Image.asset('assets/images/signup_img.png'),
                   Expanded(child: Container()), // Push the form to the bottom
                   Container(
                     decoration: BoxDecoration(
@@ -70,7 +73,7 @@ class _SignUpState extends State<SignUp> {
                             ),
                             gapH20,
                             PrimaryTextField(
-                              hintText: "Enter your Email",
+                              hintText: "Enter your Name",
                               controller: nameController,
                               isRequried: true,
                             ),
@@ -107,10 +110,10 @@ class _SignUpState extends State<SignUp> {
                               onPressed: () {
                                 (isTLUser)
                                     ? (pinNumController.text == '123456')
-                                        ? createUserwithEmailAndPassword(
+                                        ? authProvider.createUserwithEmailAndPassword(
                                             context,
-                                            emailController.text.trim(),
                                             nameController.text,
+                                            emailController.text.trim(),
                                             passwordController.text.trim(),
                                             isTLUser)
                                         : CustomSnackbar.show(
@@ -118,10 +121,10 @@ class _SignUpState extends State<SignUp> {
                                             message:
                                                 "The PIn Number You have entered is not Correct, If Your an en Employee Uncheck the TL Check box",
                                             type: SnackbarType.error)
-                                    : createUserwithEmailAndPassword(
+                                    : authProvider.createUserwithEmailAndPassword(
                                         context,
-                                        emailController.text.trim(),
                                         nameController.text,
+                                        emailController.text.trim(),
                                         passwordController.text.trim(),
                                         isTLUser);
                                 CustomSnackbar.show(

@@ -18,5 +18,12 @@ Future<void> createUser({
   });
 }
 
-
+Future<void> createTask(
+    {required String name,
+    required String task,
+    required String email,
+    required String assignedBy}) async {
+  firestore.collection('employee_task').add(
+      {'name': name, 'email': email, 'task': task, 'assignedby': assignedBy});
+}
 
