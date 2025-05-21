@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:task_management_app/auth/providers/auth_provider.dart';
+import 'package:task_management_app/auth/temp.dart';
 import 'package:task_management_app/constants/colors.dart';
 import 'package:task_management_app/homepage/provider/homepage_provider.dart';
 import 'package:task_management_app/router/app_router.dart';
@@ -12,12 +13,12 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await GetStorage.init();
-  runApp(MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => AuthProvider()),
-        ChangeNotifierProvider(create: (_) => UserListProvider())
-      ],
-      child: MyApp()));
+  NotificationsInit.initNotifications();
+
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider(create: (_) => AuthProvider()),
+    ChangeNotifierProvider(create: (_) => UserListProvider())
+  ], child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {

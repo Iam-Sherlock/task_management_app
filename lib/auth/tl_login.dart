@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:provider/provider.dart';
 import 'package:task_management_app/auth/providers/auth_provider.dart';
 import 'package:task_management_app/constants/colors.dart';
@@ -6,21 +7,38 @@ import 'package:task_management_app/constants/style.dart';
 import 'package:task_management_app/constants/utils.dart';
 import 'package:task_management_app/widgets/appbar_widget.dart';
 import 'package:task_management_app/widgets/primary_button.dart';
+import 'package:task_management_app/widgets/server_key.dart';
 import 'package:task_management_app/widgets/text_field.dart';
 
-class TlLogin extends StatelessWidget {
+class TlLogin extends StatefulWidget {
   const TlLogin({super.key});
+
+  @override
+  State<TlLogin> createState() => _TlLoginState();
+}
+
+class _TlLoginState extends State<TlLogin> {
+  final box = GetStorage();
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final key = await get_server_key().server_token();
+      box.write('server-key', key);
+      print("UUUUUUUUUUUUUUUUUUUUUUUU");
+      print(key);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context, listen: true);
     TextEditingController emailController = TextEditingController();
     TextEditingController passwordController = TextEditingController();
+    final formkey = GlobalKey<FormState>();
 
     return Scaffold(
       appBar: AppbarWidget(
         title: "Team Lead Log In",
-        isInformation: false,
         backArraw: true,
       ),
       body: SingleChildScrollView(
@@ -38,6 +56,7 @@ class TlLogin extends StatelessWidget {
               width: 400,
               height: 400,
               child: Form(
+                key: formkey,
                 child: Padding(
                   padding:
                       const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
@@ -64,11 +83,13 @@ class TlLogin extends StatelessWidget {
                         text: 'Log In',
                         width: 300,
                         onPressed: () {
-                          authProvider.loginUserwithEmailAndPassword(
-                              context,
-                              emailController.text.trim(),
-                              passwordController.text.trim(),
-                              true);
+                          if (formkey.currentState!.validate()) {
+                            authProvider.loginUserwithEmailAndPassword(
+                                context,
+                                emailController.text.trim(),
+                                passwordController.text.trim(),
+                                true);
+                          }
                         },
                       ),
                     ],

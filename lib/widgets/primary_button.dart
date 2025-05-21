@@ -5,12 +5,16 @@ import 'package:task_management_app/constants/colors.dart';
 class PrimaryButton extends StatelessWidget {
   double width;
   String text;
+  double fontSize;
+  double height;
   final void Function() onPressed;
   PrimaryButton({
     super.key,
     required this.width,
     required this.text,
     required this.onPressed,
+    this.fontSize = 16,
+    this.height = 50
   });
 
   @override
@@ -22,7 +26,7 @@ class PrimaryButton extends StatelessWidget {
             color: AppColors.primaryBlue,
             border: Border.all(width: 1, color: AppColors.primaryBlue),
             borderRadius: BorderRadius.circular(8)),
-        height: 50,
+        height: height,
         width: width,
         child: Center(
           child: Text(
@@ -30,7 +34,7 @@ class PrimaryButton extends StatelessWidget {
             style: GoogleFonts.openSans(
                 color: AppColors.textColorWhite,
                 fontWeight: FontWeight.w600,
-                fontSize: 16),
+                fontSize: fontSize),
           ),
         ),
       ),

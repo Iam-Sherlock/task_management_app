@@ -30,9 +30,7 @@ class _EmployeeHomepageState extends State<EmployeeHomepage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppbarWidget(
-        title: "Nulinz Task Manager",
-        isInformation: false,
-        backArraw: true,
+        title: "Nulinz Task Manager"
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.end,

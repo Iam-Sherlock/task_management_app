@@ -1,26 +1,26 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:task_management_app/constants/colors.dart';
-import 'package:task_management_app/constants/utils.dart';
+import 'package:task_management_app/widgets/primary_button.dart';
 
 class AppbarWidget extends StatelessWidget implements PreferredSizeWidget {
   final String title;
-  final bool isInformation;
   final bool backArraw;
+  // final bool logout;
 
-  AppbarWidget(
-      {super.key,
-      required this.title,
-      required this.isInformation,
-      this.backArraw = false});
+  AppbarWidget({
+    super.key,
+    required this.title,
+    this.backArraw = false,
+  });
 
-  @override
   @override
   Widget build(BuildContext context) {
     return PreferredSize(
       preferredSize: preferredSize,
       child: AppBar(
-        scrolledUnderElevation: 0, 
+        scrolledUnderElevation: 0,
         automaticallyImplyLeading: false,
         backgroundColor: AppColors.primaryBgColor,
         title: Stack(
@@ -33,7 +33,8 @@ class AppbarWidget extends StatelessWidget implements PreferredSizeWidget {
                   onPressed: () {
                     context.pop();
                   },
-                  icon: Icon(Icons.arrow_back_ios, size: 20, color: AppColors.primaryBlue),
+                  icon: Icon(Icons.arrow_back_ios,
+                      size: 20, color: AppColors.primaryBlue),
                 ),
               ),
             Center(
@@ -47,38 +48,48 @@ class AppbarWidget extends StatelessWidget implements PreferredSizeWidget {
                 ),
               ),
             ),
-            if (isInformation)
+            if (!backArraw)
               Align(
                 alignment: Alignment.centerRight,
-                child: PopupMenuButton<String>(
-                  icon: Icon(Icons.more_vert, color: AppColors.primaryBlue),
-                  onSelected: (String value) async {
-                    if (value == 'Profile') {
-                      Navigator.pushNamed(context, '/profile');
-                    } else if (value == 'Settings') {
-                      Navigator.pushNamed(context, '/settings');
-                    } else if (value == 'Logout') {
-                      // Handle logout
-                    }
+                child: IconButton(
+                  icon: Icon(Icons.logout, color: AppColors.primaryBlue),
+                  onPressed: () {
+                    _showLogoutDialog(context);
                   },
-                  itemBuilder: (BuildContext context) => [
-                    const PopupMenuItem<String>(
-                      value: 'Profile',
-                      child: Text('Profile'),
-                    ),
-                    const PopupMenuItem<String>(
-                      value: 'Settings',
-                      child: Text('Settings'),
-                    ),
-                    const PopupMenuItem<String>(
-                      value: 'Logout',
-                      child: Text('Logout'),
-                    ),
-                  ],
                 ),
               ),
           ],
         ),
+      ),
+    );
+  }
+
+  void _showLogoutDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Confirm Logout"),
+        content: const Text("Are you sure you want to logout?"),
+        actions: [
+          PrimaryButton(
+            fontSize: 12,
+            height: 30,
+            width: 60,
+            onPressed: () => Navigator.of(context).pop(), // close dialog
+            text: 'Cancel',
+          ),
+          PrimaryButton(
+            fontSize: 12,
+            height: 30,
+            width: 60,
+            onPressed: () async{
+               await FirebaseAuth.instance.signOut();
+              Navigator.of(context).pop(); 
+              context.go('/welcome');
+            },
+            text: 'Yes',
+          ),
+        ],
       ),
     );
   }

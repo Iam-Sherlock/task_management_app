@@ -1,5 +1,5 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:task_management_app/auth/providers/auth_provider.dart';
 import 'package:task_management_app/constants/colors.dart';
@@ -22,6 +22,7 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
 
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final formkey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -46,6 +47,32 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
     ));
 
     _animationController.forward();
+
+    _requestNotificationPermission();
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print('📥 Got a message whilst in the foreground!');
+      print('🔢 Message data: ${message.data}');
+
+      if (message.notification != null) {
+        print(
+            '🔔 Message notification: ${message.notification?.title}, ${message.notification?.body}');
+      }
+    });
+  }
+
+  Future<void> _requestNotificationPermission() async {
+    NotificationSettings settings =
+        await FirebaseMessaging.instance.requestPermission(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+
+    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+      print('TL Notification permission granted');
+    } else {
+      print('TL Notification permission declined');
+    }
   }
 
   @override
@@ -59,10 +86,10 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context, listen: true);
+
     return Scaffold(
       appBar: AppbarWidget(
         title: "Employee Sign In",
-        isInformation: false,
         backArraw: true,
       ),
       body: SingleChildScrollView(
@@ -95,6 +122,7 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
                 padding:
                     const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
                 child: Form(
+                  key: formkey,
                   child: Column(
                     children: [
                       Text("Log In", style: Style.subHeadingStyle),
@@ -116,12 +144,14 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
                         text: 'Log In',
                         width: 300,
                         onPressed: () {
-                          authProvider.loginUserwithEmailAndPassword(
-                            context,
-                            emailController.text.trim(),
-                            passwordController.text.trim(),
-                            false,
-                          );
+                          if (formkey.currentState!.validate()) {
+                            authProvider.loginUserwithEmailAndPassword(
+                              context,
+                              emailController.text.trim(),
+                              passwordController.text.trim(),
+                              false,
+                            );
+                          }
                         },
                       ),
                     ],

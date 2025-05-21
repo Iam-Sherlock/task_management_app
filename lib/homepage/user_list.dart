@@ -29,7 +29,6 @@ class _UserListPageState extends State<UserListPage> {
     return Scaffold(
       appBar: AppbarWidget(
         title: "Nulinz Task Manager",
-        isInformation: false,
         backArraw: true,
       ),
       body: Column(

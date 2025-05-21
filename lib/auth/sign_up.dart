@@ -26,11 +26,11 @@ class _SignUpState extends State<SignUp> {
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context, listen: true);
+    final formkey = GlobalKey<FormState>();
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppbarWidget(
         title: "Sign Up",
-        isInformation: false,
         backArraw: true,
       ),
       body: SafeArea(
@@ -56,6 +56,7 @@ class _SignUpState extends State<SignUp> {
                     ),
                     width: double.infinity,
                     child: Form(
+                      key: formkey,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
                             vertical: 20, horizontal: 16),
@@ -108,30 +109,35 @@ class _SignUpState extends State<SignUp> {
                               text: 'Sign Up',
                               width: 300,
                               onPressed: () {
-                                (isTLUser)
-                                    ? (pinNumController.text == '123456')
-                                        ? authProvider.createUserwithEmailAndPassword(
-                                            context,
-                                            nameController.text,
-                                            emailController.text.trim(),
-                                            passwordController.text.trim(),
-                                            isTLUser)
-                                        : CustomSnackbar.show(
-                                            context: context,
-                                            message:
-                                                "The PIn Number You have entered is not Correct, If Your an en Employee Uncheck the TL Check box",
-                                            type: SnackbarType.error)
-                                    : authProvider.createUserwithEmailAndPassword(
-                                        context,
-                                        nameController.text,
-                                        emailController.text.trim(),
-                                        passwordController.text.trim(),
-                                        isTLUser);
-                                CustomSnackbar.show(
-                                    context: context,
-                                    message:
-                                        "Registration Success Can you Please Login Once",
-                                    type: SnackbarType.success);
+                                if (formkey.currentState!.validate()) {
+                                  (isTLUser)
+                                      ? (pinNumController.text == '123456') // can be future enhanced by getting the Code from DB
+                                          ? authProvider
+                                              .createUserwithEmailAndPassword(
+                                                  context,
+                                                  nameController.text,
+                                                  emailController.text.trim(),
+                                                  passwordController.text
+                                                      .trim(),
+                                                  isTLUser)
+                                          : CustomSnackbar.show(
+                                              context: context,
+                                              message:
+                                                  "The PIn Number You have entered is not Correct, If Your an en Employee Uncheck the TL Check box",
+                                              type: SnackbarType.error)
+                                      : authProvider
+                                          .createUserwithEmailAndPassword(
+                                              context,
+                                              nameController.text,
+                                              emailController.text.trim(),
+                                              passwordController.text.trim(),
+                                              isTLUser);
+                                  CustomSnackbar.show(
+                                      context: context,
+                                      message:
+                                          "Registration Success Can you Please Login Once",
+                                      type: SnackbarType.success);
+                                }
                               },
                             ),
                           ],

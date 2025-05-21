@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:go_router/go_router.dart';
@@ -47,6 +49,26 @@ class AuthProvider with ChangeNotifier {
           box.write('TLemailID', user!.email);
         } else {
           box.write('employeeEmailId', user!.email);
+          final fcmToken = await FirebaseMessaging.instance.getToken();
+
+          var querySnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .where('userId', isEqualTo: user.uid)
+          .get();
+
+        for (var doc in querySnapshot.docs) {
+          await doc.reference.update({'fcmToken': fcmToken});
+        }
+
+          final uid =
+              FirebaseAuth.instance.currentUser?.uid ?? "testUser";
+          print("Print UID============ $uid");
+          // await FirebaseFirestore.instance.collection('users').where('userID', isEqualTo: user.uid).
+          // await FirebaseFirestore.instance.collection('users').doc().update({
+          //   'fcmToken': fcmToken,
+          // });
+          print('FCM Token saved for $uid: $fcmToken');
+          box.write('FCMToken', fcmToken);
           context.push('/login/emphomepage');
         }
       }
