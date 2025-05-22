@@ -22,6 +22,7 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
   Widget build(BuildContext context) {
     final userListProvider =
         Provider.of<UserListProvider>(context, listen: true);
+    userListProvider.reloadUsersList();
     return SizedBox(
       height: 300,
       child: Padding(
@@ -74,7 +75,6 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
                     taskController.text.trim(),
                     box.read("TLemailID"),
                     _selectedUser!.fcmtoken!);
-                
               },
             ),
           ],

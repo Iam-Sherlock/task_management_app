@@ -37,10 +37,9 @@ class UserListProvider with ChangeNotifier {
         print("User Data is here ==== ${data.toString()}");
         return UserModel.fromJson(data ?? {});
       }).toList();
-      notifyListeners(); // Inform listeners that the data has changed
+      notifyListeners(); 
     } catch (error) {
       print("Error fetching users: $error");
-      // Handle error appropriately, maybe set an error state
     }
   }
 
@@ -78,7 +77,6 @@ class UserListProvider with ChangeNotifier {
       notifyListeners();
     } catch (error) {
       print("Error fetching users and their tasks: $error");
-      // Optional: Handle error state
     }
   }
 
@@ -103,30 +101,28 @@ class UserListProvider with ChangeNotifier {
       }).toList();
 
       _tasks = tasks;
-      notifyListeners(); // Notifies the UI to rebuild
+      notifyListeners(); 
     } catch (e, stackTrace) {
       print("fetchTaskList: Error occurred - $e");
       print("Stack trace: $stackTrace");
     }
   }
 
-  // You might have other methods to add, delete, or update users here.
-  // Remember to call notifyListeners() after any modification to _users.
 
   Future<void> addUser(UserModel newUser) async {
     try {
       await firestore.collection('users').add(newUser.toJson());
-      // After successfully adding to Firestore, fetch the updated list
+      
       await fetchUsersList();
     } catch (error) {
       print("Error adding user: $error");
-      // Handle error
+      
     }
   }
 
   // Example method to reload the user list
   Future<void> reloadUsersList() async {
-    await fetchUsersList();
+    await fetchUsersListNew();
   }
 
   Future<void> createTaskByTL(BuildContext context, String name, String email,
@@ -141,7 +137,7 @@ class UserListProvider with ChangeNotifier {
       await fetchUsersListNew();
       await sendTaskNotification(fcmToken,task,assignedBy);
       context.pop();
-    } on FirebaseAuthException catch (e) {
+    } on FirebaseAuthException {
       // TODO
       CustomSnackbar.show(
           context: context,
@@ -174,9 +170,9 @@ class UserListProvider with ChangeNotifier {
     );
 
     if (response.statusCode == 200) {
-      print('✅ Notification sent successfully');
+      print(' Notification sent successfully');
     } else {
-      print('❌ Failed to send notification: ${response.body}');
+      print(' Failed to send notification: ${response.body}');
     }
   }
 }

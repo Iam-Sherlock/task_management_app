@@ -8,7 +8,7 @@ import 'package:task_management_app/constants/colors.dart';
 class Style {
   // Font Sizes
   static const double headingFontSize = 40.0; // Top Centered Heading
-  static const double subHeadingFontSize = 24; // Sub Heading
+  static const double subHeadingFontSize = 14; // Sub Heading
   static const double contentFontSize = 16; // Content
   static const double buttonFontSize = 16.0;
 
@@ -19,12 +19,12 @@ class Style {
       color: AppColors.textColorBlack);
 
   static TextStyle subHeadingStyle = GoogleFonts.openSans(
-      fontWeight: FontWeight.w600,
-      fontSize: subHeadingFontSize,
-      color: AppColors.textColorBlack,
-      );
+    fontWeight: FontWeight.w600,
+    fontSize: subHeadingFontSize,
+    color: AppColors.textColorBlack,
+  );
 
-   static TextStyle subHeadingStyleWithBlueColor = GoogleFonts.openSans(
+  static TextStyle subHeadingStyleWithBlueColor = GoogleFonts.openSans(
     fontWeight: FontWeight.w600,
     fontSize: 12,
     color: AppColors.primaryBlue,

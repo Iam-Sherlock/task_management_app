@@ -30,7 +30,7 @@ class _TeamLeadHomepageState extends State<TeamLeadHomepage> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () async{
+        onPressed: () async {
           showModalBottomSheet(
             context: context,
             isScrollControlled: true,
@@ -43,86 +43,82 @@ class _TeamLeadHomepageState extends State<TeamLeadHomepage> {
               },
             ),
           );
-          
-            
-        
         },
         child: const Icon(Icons.add),
       ),
-      appBar: AppbarWidget(
-        title: "Nulinz Task Manager"
-      ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: Text(
+      appBar: AppbarWidget(title: "Nulinz Task Manager"),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
               "List of Employees and Their Tasks",
               style: Style.subHeadingStyle,
               textAlign: TextAlign.left,
             ),
-          ),
-          Expanded(
-            child: Consumer<UserListProvider>(
-              builder: (context, userListProvider, _) {
-                final usersWithTasks = userListProvider.userWithTasksList;
+            Expanded(
+              child: Consumer<UserListProvider>(
+                builder: (context, userListProvider, _) {
+                  final usersWithTasks = userListProvider.userWithTasksList;
 
-                return ListView.builder(
-                  itemCount: usersWithTasks.length,
-                  itemBuilder: (context, index) {
-                    final user = usersWithTasks[index].user;
-                    final tasks = usersWithTasks[index].tasks;
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 6.0),
-                      child: UserListCard(
-                        user: user,
-                        tasks: tasks,
-                      ),
-                    );
+                  return ListView.builder(
+                    itemCount: usersWithTasks.length,
+                    itemBuilder: (context, index) {
+                      final user = usersWithTasks[index].user;
+                      final tasks = usersWithTasks[index].tasks;
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 6.0),
+                        child: UserListCard(
+                          user: user,
+                          tasks: tasks,
+                        ),
+                      );
 
-                    // return Card(
-                    //   elevation: 3,
-                    //   margin: const EdgeInsets.symmetric(
-                    //       horizontal: 12, vertical: 8),
-                    //   child: Padding(
-                    //     padding: const EdgeInsets.all(12.0),
-                    //     child: Column(
-                    //       crossAxisAlignment: CrossAxisAlignment.start,
-                    //       children: [
-                    //         Text(
-                    //           user.name ?? 'Unnamed User',
-                    //           style: TextStyle(
-                    //               fontSize: 18, fontWeight: FontWeight.bold),
-                    //         ),
-                    //         const SizedBox(height: 4),
-                    //         Text(user.email ?? 'No email'),
-                    //         const Divider(),
-                    //         tasks.isEmpty
-                    //             ? Text("No tasks assigned.")
-                    //             : ListView.builder(
-                    //                 itemCount: tasks.length,
-                    //                 shrinkWrap: true,
-                    //                 physics:
-                    //                     const NeverScrollableScrollPhysics(),
-                    //                 itemBuilder: (context, taskIndex) {
-                    //                   final task = tasks[taskIndex];
-                    //                   return ListTile(
-                    //                     title: Text(
-                    //                         "${taskIndex + 1}. ${task['task']}" ??
-                    //                             'No Title'),
-                    //                   );
-                    //                 },
-                    //               )
-                    //       ],
-                    //     ),
-                    //   ),
-                    // );
-                  },
-                );
-              },
+                      // return Card(
+                      //   elevation: 3,
+                      //   margin: const EdgeInsets.symmetric(
+                      //       horizontal: 12, vertical: 8),
+                      //   child: Padding(
+                      //     padding: const EdgeInsets.all(12.0),
+                      //     child: Column(
+                      //       crossAxisAlignment: CrossAxisAlignment.start,
+                      //       children: [
+                      //         Text(
+                      //           user.name ?? 'Unnamed User',
+                      //           style: TextStyle(
+                      //               fontSize: 18, fontWeight: FontWeight.bold),
+                      //         ),
+                      //         const SizedBox(height: 4),
+                      //         Text(user.email ?? 'No email'),
+                      //         const Divider(),
+                      //         tasks.isEmpty
+                      //             ? Text("No tasks assigned.")
+                      //             : ListView.builder(
+                      //                 itemCount: tasks.length,
+                      //                 shrinkWrap: true,
+                      //                 physics:
+                      //                     const NeverScrollableScrollPhysics(),
+                      //                 itemBuilder: (context, taskIndex) {
+                      //                   final task = tasks[taskIndex];
+                      //                   return ListTile(
+                      //                     title: Text(
+                      //                         "${taskIndex + 1}. ${task['task']}" ??
+                      //                             'No Title'),
+                      //                   );
+                      //                 },
+                      //               )
+                      //       ],
+                      //     ),
+                      //   ),
+                      // );
+                    },
+                  );
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

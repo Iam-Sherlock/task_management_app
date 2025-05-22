@@ -32,7 +32,8 @@ migrate_working_dir/
 .pub-cache/
 .pub/
 /build/
-
+/android/app/google-services.json
+/lib/widgets/server_key.dart
 # Symbolication related
 app.*.symbols
 

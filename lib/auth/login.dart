@@ -50,12 +50,12 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
 
     _requestNotificationPermission();
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print('📥 Got a message whilst in the foreground!');
-      print('🔢 Message data: ${message.data}');
+      print('Got a message whilst in the foreground!');
+      print('Message data: ${message.data}');
 
       if (message.notification != null) {
         print(
-            '🔔 Message notification: ${message.notification?.title}, ${message.notification?.body}');
+            'Message notification: ${message.notification?.title}, ${message.notification?.body}');
       }
     });
   }

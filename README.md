@@ -14,3 +14,12 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+
+### Missing Files
+
+The below file is used in crucial parts of Push Notification, Please get the file from
+firebase > settings > Manage Service Accounts create an API Key download the file
+lib/widgets/server_key.dart
+
+Below file is used to integrate the
+android/app/google-services.json
