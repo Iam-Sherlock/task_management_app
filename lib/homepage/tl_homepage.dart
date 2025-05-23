@@ -29,11 +29,13 @@ class _TeamLeadHomepageState extends State<TeamLeadHomepage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           showModalBottomSheet(
             context: context,
-            isScrollControlled: true,
+            isScrollControlled: false,
+            enableDrag: true,
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
             ),
@@ -50,6 +52,7 @@ class _TeamLeadHomepageState extends State<TeamLeadHomepage> {
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(

@@ -23,10 +23,16 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
     final userListProvider =
         Provider.of<UserListProvider>(context, listen: true);
     userListProvider.reloadUsersList();
-    return SizedBox(
-      height: 300,
+    return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.only(
+          left: 16.0,
+          right: 16.0,
+          top: 16.0,
+          // Add padding at the bottom equal to the keyboard height
+          // This is crucial for the content to scroll above the keyboard
+          bottom: MediaQuery.of(context).viewInsets.bottom + 16.0,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
