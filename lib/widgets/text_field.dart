@@ -50,7 +50,7 @@ class PrimaryTextField extends StatelessWidget {
   }
 
   String? _validator(String? value) {
-    final passwordRegex = RegExp(r'^.{7,}$');
+    final passwordRegex = RegExp(r'^.{6,}$');
     final emailRegex = RegExp(
         r'^[a-z0-9]+([\.-][a-z0-9]+)*@[a-z0-9]+([\.-][a-z0-9]+)*\.[a-z]{2,7}$');
     final phoneNumberRegex = RegExp(r'^(\+?\d{1,3}[- ]?)?\d{10}$');

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -44,32 +46,40 @@ class AuthProvider with ChangeNotifier {
 
       if (userCredential.user != null) {
         final user = userCredential.user;
-        if (isTLuser) {
-          context.push('/tl_login/tlhomepage');
-          box.write('TLemailID', user!.email);
-        } else {
-          box.write('employeeEmailId', user!.email);
-          final fcmToken = await FirebaseMessaging.instance.getToken();
+        var querySnapshot = await FirebaseFirestore.instance
+            .collection('users')
+            .where('userId', isEqualTo: user!.uid)
+            .get();
 
-          var querySnapshot = await FirebaseFirestore.instance
-          .collection('users')
-          .where('userId', isEqualTo: user.uid)
-          .get();
+        if (querySnapshot.docs.isNotEmpty) {
+          if (isTLuser) {
+            if (querySnapshot.docs.first.get('isTLuser') == isTLuser) {
+              context.push('/tl_login/tlhomepage');
+              box.write('TLemailID', user.email);
+            } else {
+              throw FirebaseAuthException(
+                  code: "You are not a TL Can you login to Tech");
+            }
+          } else {
+            if (querySnapshot.docs.first.get('isTLuser') == isTLuser) {
+              box.write('employeeEmailId', user!.email);
+              final fcmToken = await FirebaseMessaging.instance.getToken();
 
-        for (var doc in querySnapshot.docs) {
-          await doc.reference.update({'fcmToken': fcmToken});
-        }
+              for (var doc in querySnapshot.docs) {
+                await doc.reference.update({'fcmToken': fcmToken});
+              }
 
-          final uid =
-              FirebaseAuth.instance.currentUser?.uid ?? "testUser";
-          print("Print UID============ $uid");
-          // await FirebaseFirestore.instance.collection('users').where('userID', isEqualTo: user.uid).
-          // await FirebaseFirestore.instance.collection('users').doc().update({
-          //   'fcmToken': fcmToken,
-          // });
-          print('FCM Token saved for $uid: $fcmToken');
-          box.write('FCMToken', fcmToken);
-          context.push('/login/emphomepage');
+              final uid = FirebaseAuth.instance.currentUser?.uid ?? "testUser";
+              print("Print UID============ $uid");
+              print('FCM Token saved for $uid: $fcmToken');
+              box.write('FCMToken', fcmToken);
+              context.push('/login/emphomepage');
+            } else {
+              throw FirebaseAuthException(
+                  code:
+                      "Bro! You are Promoted to TL Bruh and why you are still logging as an Employee, Please Log in as TL");
+            }
+          }
         }
       }
     } on FirebaseAuthException catch (e) {

@@ -138,7 +138,8 @@ class _WelcomeScreenState extends State<WelcomeScreen>
         ),
       ),
       bottomNavigationBar: Padding(
-        padding: const EdgeInsets.only(bottom: 16.0),
+        padding:
+            EdgeInsets.only(bottom: MediaQuery.of(context).viewPadding.bottom), //using viewPadding to avoid navigation buttons overlapping the Welcome Screen buttons
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
